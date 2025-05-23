@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+/* tailwind.config.js -> extend di theme */
+.input {
+  @apply w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+.input {
+  @apply w-full mb-4 p-3 border border-gray-300 rounded-xl;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-xl;
+}
+
+.button {
+  @apply w-full py-2 rounded-md text-white font-semibold transition duration-300;
+}
+
+.icon-eye {
+  @apply absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-300;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

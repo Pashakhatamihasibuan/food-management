@@ -23,21 +23,21 @@ export default function Testimonials() {
   ];
 
   return (
-    <section id="testimonials" className="py-24 bg-white px-6">
+    <section id="testimonials" className="py-28 bg-white px-6">
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12">What Our Users Say</h2>
-        <div className="grid md:grid-cols-3 gap-8">
+        <h2 className="text-4xl font-bold text-gray-900 mb-12">What Our Users Say</h2>
+        <div className="grid md:grid-cols-3 gap-10">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               viewport={{ once: true }}
-              className="bg-gray-50 p-6 rounded-lg shadow-md"
+              className="bg-gray-50 p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition"
             >
-              <Image src={testimonial.image} alt={testimonial.name} width={80} height={80} className="mx-auto rounded-full mb-4" />
-              <p className="text-gray-700 italic mb-4">{testimonial.feedback}</p>
+              <Image src={testimonial.image} alt={testimonial.name} width={80} height={80} className="mx-auto rounded-full mb-4 object-cover" />
+              <p className="text-gray-700 italic mb-4">“{testimonial.feedback}”</p>
               <h3 className="text-lg font-semibold text-gray-800">{testimonial.name}</h3>
             </motion.div>
           ))}

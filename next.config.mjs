@@ -17,6 +17,7 @@ const nextConfig = {
       "www.astronauts.id",
       "foto.kontan.co.id",
       "images.unsplash.com",
+      "media.tenor.com",
     ],
   },
 };

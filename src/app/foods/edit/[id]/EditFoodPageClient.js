@@ -77,7 +77,7 @@ export default function FoodEditPage({ id }) {
   const handleSubmit = async () => {
     try {
       const res = await fetch(`https://api-bootcamp.do.dibimbing.id/api/v1/update-food/${id}`, {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           apiKey: "w05KkI9AWhKxzvPFtXotUva-",
@@ -130,7 +130,7 @@ export default function FoodEditPage({ id }) {
             value={form.imageUrl}
             onChange={handleChange}
             placeholder="https://contoh.com/gambar.jpg"
-            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-500"
           />
           <p className="text-sm text-gray-500 mt-1">Masukkan URL gambar secara langsung jika tidak ingin meng-upload file.</p>
         </div>
@@ -141,14 +141,14 @@ export default function FoodEditPage({ id }) {
             value={form.name}
             onChange={handleChange}
             placeholder="Nama"
-            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none text-gray-500 focus:ring-2 focus:ring-indigo-500"
           />
           <input
             name="description"
             value={form.description}
             onChange={handleChange}
             placeholder="Deskripsi"
-            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-500"
           />
           <textarea
             name="ingredients"
@@ -156,7 +156,7 @@ export default function FoodEditPage({ id }) {
             onChange={handleChange}
             placeholder="Bahan-bahan"
             rows={4}
-            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-500"
           />
         </div>
 

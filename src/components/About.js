@@ -17,7 +17,13 @@ export default function About() {
           </p>
         </motion.div>
         <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-          <Image src="/about-image.svg" alt="Food platform illustration" width={500} height={500} className="w-full h-auto rounded-2xl shadow-lg" />
+          <Image
+            src="https://images.unsplash.com/photo-1496116218417-1a781b1c416c?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Food platform illustration"
+            width={500}
+            height={500}
+            className="w-full h-auto rounded-2xl shadow-lg"
+          />
         </motion.div>
       </div>
     </section>

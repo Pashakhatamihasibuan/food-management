@@ -44,19 +44,20 @@ export default function FoodDetailPageClient({ id }) {
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
-        Kembali
+        Back
       </button>
 
-      <h1 className="text-3xl font-bold text-indigo-500 mb-6">Detail Makanan</h1>
+      <h1 className="text-3xl font-bold text-indigo-500 mb-6">Food Details</h1>
 
       <div className="bg-white shadow-lg rounded-xl p-6 space-y-4 transition">
         <Image src={food.imageUrl} alt={food.name} className="w-full max-h-64 object-cover rounded-lg" width={800} height={400} priority />
         <div>
           <h2 className="text-2xl font-semibold text-gray-800">{food.name}</h2>
+          <h3 className="font-semibold text-gray-700 mt-5">Description</h3>
           <p className="text-gray-600 mt-2">{food.description}</p>
         </div>
         <div>
-          <h3 className="font-semibold text-gray-700 mb-1">Bahan-bahan:</h3>
+          <h3 className="font-semibold text-gray-700 mb-1">Ingredients:</h3>
           <p className="text-gray-600 whitespace-pre-line">{food.ingredients}</p>
         </div>
       </div>

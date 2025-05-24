@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function FoodEditPage({ id }) {
   const router = useRouter();
@@ -13,6 +14,8 @@ export default function FoodEditPage({ id }) {
     description: "",
     imageUrl: "",
     ingredients: "",
+    price: "",
+    priceDiscount: "",
   });
   const [uploading, setUploading] = useState(false);
 
@@ -34,7 +37,9 @@ export default function FoodEditPage({ id }) {
           name: data.data.name || "",
           description: data.data.description || "",
           imageUrl: data.data.imageUrl || "",
-          ingredients: data.data.ingredients || "",
+          ingredients: data.data.ingredients?.join(", ") || "",
+          price: data.data.price?.toString() || "",
+          priceDiscount: data.data.priceDiscount?.toString() || "",
         });
       } catch (err) {
         console.error("Fetch error:", err.message);
@@ -75,55 +80,74 @@ export default function FoodEditPage({ id }) {
   };
 
   const handleSubmit = async () => {
+    const payload = {
+      name: form.name,
+      description: form.description,
+      imageUrl: form.imageUrl,
+      ingredients: form.ingredients.split(",").map((item) => item.trim()),
+      price: Number(form.price),
+    };
+
+    if (form.priceDiscount.trim() !== "") {
+      payload.priceDiscount = Number(form.priceDiscount);
+    }
+
     try {
-      const res = await fetch(`https://api-bootcamp.do.dibimbing.id/api/v1/update-food/${id}`, {
+      setUploading(true);
+
+      const res = await fetch(`https://api-bootcamp.do.dibimbing.id/api/v1/update-food/${food.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1pZnRhaGZhcmhhbkBnbWFpbC5jb20iLCJ1c2VySWQiOiJjYTIzZDdjYy02Njk1LTQzNGItODE2Yy03ZTlhNWMwNGMxNjQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2NjE4NzUzMjF9.wV2OECzC25qNujtyb9YHyzYIbYEV-wud3TQsYv7oB4Q",
           apiKey: "w05KkI9AWhKxzvPFtXotUva-",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Gagal memperbarui makanan");
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Gagal memperbarui menu.");
+      }
 
-      alert("Makanan berhasil diperbarui!");
-    } catch (err) {
-      console.error("Submit error:", err.message);
-      alert("Terjadi kesalahan saat menyimpan.");
+      Swal.fire("Sukses", "Menu berhasil diperbarui!", "success").then(() => {
+        router.push("/foods");
+      });
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
     <div className="p-6 max-w-3xl mx-auto animate-fadeIn">
-      {/* Tombol Back */}
       <button onClick={() => router.back()} className="mb-6 text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-2" aria-label="Kembali">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
-        Kembali
+        Back
       </button>
 
-      <h1 className="text-4xl font-bold text-indigo-700 mb-6">Edit Makanan</h1>
+      <h1 className="text-4xl font-bold text-indigo-700 mb-6">Edit Food</h1>
 
       <div className="bg-white shadow-lg rounded-xl p-6 space-y-6 border border-gray-100">
         {form.imageUrl && <Image src={form.imageUrl} alt={form.name} className="w-full h-64 object-cover rounded-xl" width={800} height={400} priority />}
 
-        {/* Upload Gambar */}
         <div>
-          <label className="block font-semibold text-gray-700 mb-2">Upload Gambar Baru</label>
+          <label className="block font-semibold text-gray-700 mb-2">Upload New Image</label>
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
             className="block w-full border border-gray-300 rounded-lg p-2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200 transition"
           />
-          {uploading && <p className="text-sm text-gray-500 mt-2">Mengunggah gambar...</p>}
+          {uploading && <p className="text-sm text-gray-500 mt-2">Uploading images or saving changes...</p>}
         </div>
 
-        {/* Input URL Gambar */}
         <div>
-          <label className="block font-semibold text-gray-700 mb-2">Atau Masukkan URL Gambar</label>
+          <label className="block font-semibold text-gray-700 mb-2">Or Enter Image URL</label>
           <input
             type="text"
             name="imageUrl"
@@ -132,36 +156,50 @@ export default function FoodEditPage({ id }) {
             placeholder="https://contoh.com/gambar.jpg"
             className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-500"
           />
-          <p className="text-sm text-gray-500 mt-1">Masukkan URL gambar secara langsung jika tidak ingin meng-upload file.</p>
         </div>
 
         <div className="grid gap-4">
-          <input
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Nama"
-            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none text-gray-500 focus:ring-2 focus:ring-indigo-500"
-          />
+          <label className="block font-semibold text-gray-700 mb-2">Food Name</label>
+          <input name="name" value={form.name} onChange={handleChange} placeholder="Nama" className="border border-gray-300 rounded-lg p-3 w-full" />
+          <label className="block font-semibold text-gray-700 mb-2">Description</label>
           <input
             name="description"
             value={form.description}
             onChange={handleChange}
             placeholder="Deskripsi"
-            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-500"
+            className="border border-gray-300 rounded-lg p-3 w-full"
           />
+          <label className="block font-semibold text-gray-700 mb-2">Ingredients</label>
           <textarea
             name="ingredients"
             value={form.ingredients}
             onChange={handleChange}
-            placeholder="Bahan-bahan"
-            rows={4}
-            className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-500"
+            placeholder="Bahan-bahan (pisahkan dengan koma)"
+            rows={3}
+            className="border border-gray-300 rounded-lg p-3 w-full"
+          />
+          <label className="block font-semibold text-gray-700 mb-2">Price</label>
+          <input
+            name="price"
+            value={form.price}
+            onChange={handleChange}
+            placeholder="Harga"
+            type="number"
+            className="border border-gray-300 rounded-lg p-3 w-full"
+          />
+          <label className="block font-semibold text-gray-700 mb-2">Price Discount</label>
+          <input
+            name="priceDiscount"
+            value={form.priceDiscount}
+            onChange={handleChange}
+            placeholder="Diskon Harga (Opsional)"
+            type="number"
+            className="border border-gray-300 rounded-lg p-3 w-full"
           />
         </div>
 
         <button onClick={handleSubmit} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg w-full transition">
-          Simpan Perubahan
+          Save Changes
         </button>
       </div>
     </div>
